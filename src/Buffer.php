@@ -169,10 +169,13 @@ class Buffer
                 $this->skip(Utils::roundUp($length, $round) - $length);
             }
             $str = Utils::bytesToString($bytes);
-            if ($charset) {
-                $str = mb_convert_encoding($str, 'utf8', $charset);
-            } elseif (!empty($this->charset)) {
-                $str = mb_convert_encoding($str, 'utf8', $this->charset);
+            
+            if (isset($charset)) {
+                $charsetFrom = isset($this->charset) ? $this->charset : mb_internal_encoding();
+                $str = mb_convert_encoding($str, $charset, $charsetFrom);
+            } elseif (isset($this->charset)) {
+                $charsetTo = isset($charset) ? $charset : mb_internal_encoding();
+                $str = mb_convert_encoding($str, $charsetTo, $this->charset);
             }
 
             return $str;
@@ -219,11 +222,13 @@ class Buffer
      * @return false|int
      */
     public function writeString($data, $length = '*', $charset = null)
-    {
-        if ($charset) {
-            $data = mb_convert_encoding($data, 'utf8', $charset);
-        } elseif (!empty($this->charset)) {
-            $data = mb_convert_encoding($data, 'utf8', $this->charset);
+    {   
+        if (isset($charset)) {
+            $charsetTo = isset($this->charset) ? $this->charset : mb_internal_encoding();
+            $data = mb_convert_encoding($data, $charsetTo, $charset);
+        } elseif (isset($this->charset)) {
+            $charsetFrom = isset($charset) ? $charset : mb_internal_encoding();
+            $data = mb_convert_encoding($data, $this->charset, $charsetFrom);
         }
 
         return $this->write(pack('A' . $length, $data));

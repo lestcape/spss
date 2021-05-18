@@ -172,10 +172,14 @@ class Buffer
             
             if (isset($charset)) {
                 $charsetFrom = isset($this->charset) ? $this->charset : mb_internal_encoding();
-                $str = mb_convert_encoding($str, $charset, $charsetFrom);
+                if (strtolower($this->charset) != strtolower($charsetTo)) {
+                    $str = mb_convert_encoding($str, $charset, $charsetFrom);
+                }
             } elseif (isset($this->charset)) {
                 $charsetTo = isset($charset) ? $charset : mb_internal_encoding();
-                $str = mb_convert_encoding($str, $charsetTo, $this->charset);
+                if (strtolower($this->charset) != strtolower($charsetTo)) {
+                    $str = mb_convert_encoding($str, $charsetTo, $this->charset);
+                }
             }
 
             return $str;
@@ -225,10 +229,14 @@ class Buffer
     {   
         if (isset($charset)) {
             $charsetTo = isset($this->charset) ? $this->charset : mb_internal_encoding();
-            $data = mb_convert_encoding($data, $charsetTo, $charset);
+            if (strtolower($this->charset) != strtolower($charsetTo)) {
+                $data = mb_convert_encoding($data, $charsetTo, $charset);
+            }
         } elseif (isset($this->charset)) {
             $charsetFrom = isset($charset) ? $charset : mb_internal_encoding();
-            $data = mb_convert_encoding($data, $this->charset, $charsetFrom);
+            if (strtolower($this->charset) != strtolower($charsetFrom)) {
+                $data = mb_convert_encoding($data, $this->charset, $charsetFrom);
+            }
         }
 
         return $this->write(pack('A' . $length, $data));

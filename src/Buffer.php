@@ -172,7 +172,7 @@ class Buffer
             
             if (isset($charset)) {
                 $charsetFrom = isset($this->charset) ? $this->charset : mb_internal_encoding();
-                if (strtolower($this->charset) != strtolower($charsetTo)) {
+                if (strtolower($this->charset) != strtolower($charsetFrom)) {
                     $str = mb_convert_encoding($str, $charset, $charsetFrom);
                 }
             } elseif (isset($this->charset)) {
